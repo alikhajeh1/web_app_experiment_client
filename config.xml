@@ -1,0 +1,24 @@
+
+<config>
+  <level id="High">
+    <threads>30</thread>
+  </level>
+  <level id="Medium">
+    <threads>10</thread>
+  </level>
+  <level id="Low">
+    <threads>5</thread>
+  </level>
+  <change>
+    <time>2012-02-01 09:00:00</time>
+    <level>Medium</level>
+  </change>
+  <change>
+    <time>2012-02-01 19:00:00</time>
+    <level>High</level>
+  </change>
+  <change>
+    <time>2012-02-01 22:00:00</time>
+    <level>Low</level>
+  </change>
+</config>
