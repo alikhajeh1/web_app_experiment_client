@@ -1,13 +1,13 @@
 
 <config>
   <level id="High">
-    <threads>30</thread>
+    <threads>30</threads>
   </level>
   <level id="Medium">
-    <threads>10</thread>
+    <threads>10</threads>
   </level>
   <level id="Low">
-    <threads>5</thread>
+    <threads>5</threads>
   </level>
   <change>
     <time>2012-02-01 09:00:00</time>
