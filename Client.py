@@ -3,6 +3,7 @@ import threading
 import datetime
 
 now = datetime.datetime.now()
+from FileIO import *
 
 """
 Client
@@ -28,11 +29,14 @@ class Client(threading.Thread):
     threading.Thread.__init__(self) # if overridding constructor - call super
     print '[Client:Constructor:] in method Constructor'
 
+"""
+Create threads to monitor config & history files
+"""
 def main():
   #client = Client()         # Call Constructor
   #client.behaviour()         # Call behaviour method
   for x in xrange ( 2 ):
-    Client().start()
+    FileIO().start()
 
 if __name__ == '__main__':
   main()
