@@ -44,8 +44,8 @@ class HTTPClient(threading.Thread):
     srcs = re.findall(r'src=\"([\w\.:=/\?-]+)\"', html)
     # add each link to the list
     list.extend(srcs)
-    # repeat for hrefs --- FILTER NEEDED FOR <a> links
-    hrefs = re.findall(r'href=\"([\w\.:=/\?-]+)\"', html)
+    # repeat for hrefs
+    hrefs = re.findall(r'link\shref=\"([\w\.:=/\?-]+)\"', html)
     list.extend(hrefs)
     
     # debug
@@ -72,11 +72,8 @@ class HTTPClient(threading.Thread):
     while not self.killself:
       print 'Running'
 
-      """
-      Browser behaviour goes here...
-
-      """
-      self.browsePage("http://google.com")
+      # Continuiously browse this page...
+      self.browsePage("http://yahoo.com")
 
     print 'Not Running'
 

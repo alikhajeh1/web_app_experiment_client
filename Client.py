@@ -1,7 +1,7 @@
 """
 Client
 
-@author: James Smith
+@author: James Smith (jws7) @ St Andrews
 """
 
 # Allow sleeping
@@ -22,6 +22,7 @@ from HistoryMonitor import *
 
 # Import HTTPClients
 from HTTPClient import *
+from HighHTTPClient import *
 
 class Client(threading.Thread):
 
