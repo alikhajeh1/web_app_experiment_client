@@ -1,66 +1,38 @@
-import urllib
-import httplib
-import re
 
+import threading
+import datetime
 
-
-from MyThread import *
+now = datetime.datetime.now()
 
 """
-HTTP Client class
-@author: James Smith (jws7) @ St Andrews
+Client
+
+Class to define interaction with remote HTTP server
+  - threaded to allow simulation of multiple clients
+  - mimics behaviour of a browser by downloading all linked files (js, css, etc)
+
+@author: James Smith
 """
 
-"""
-Simple method to return a string of a HTML page
-"""
-def getHTML(url):
-  print 'Tasked to get: ' + url
-  str = "Page"
-  # Get a file-like object for the Python Web site's home page.
-  f = urllib.urlopen(url)
-  # Read from the object, storing the page's contents in 's'.
-  s = f.read()
-  f.close()
-  return s
+class Client(threading.Thread):
 
-def getReq(url):
-  conn = httplib.HTTPConnection(url)
-  conn.request("GET", "/index.html")
-  r1 = conn.getresponse()
-  print r1.status, r1.reason
-  data1 = r1.read()
-  conn.close()
-  return data1
+  # Threaded method - default calls the behaviour method (which can be overriden)
+  def run ( self ):
+      self.behaviour()
 
-"""
-Browse a URL and download all images and linked files
+  def behaviour(self):
+    print '[Client:behaviour] in method'
+    print "[Client:behaviour] Current date and time:" + str(now)
 
-"""
-def browsePage(url):
-  html = getHTML(url)
-  print html
-
-  # Grab list of all strings that match the regex
-  srcs = re.findall(r'src=\"([\w\.:=/\?-]+)\"', html)
-  for s in srcs:
-    print s
-    getHTML(url[:-1] + s)
-    # now for each download...
-
-  hrefs = re.findall(r'href=\"([\w\.:=/\?-]+)\"', html)
-  for s in hrefs:
-    print s
-    # and download...
-  
+  def __init__(self):
+    threading.Thread.__init__(self) # if overridding constructor - call super
+    print '[Client:Constructor:] in method Constructor'
 
 def main():
-  #print getURL("http://www.yahoo.com")
-  #print getReq("138.251.198.2/test/")
-  browsePage("http://138.251.198.2/test/")
-  #doPOST("book.com")
-  #for x in xrange ( 2 ):
-  #  MyThread().start()
+  #client = Client()         # Call Constructor
+  #client.behaviour()         # Call behaviour method
+  for x in xrange ( 2 ):
+    Client().start()
 
 if __name__ == '__main__':
   main()
