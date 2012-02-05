@@ -1,6 +1,8 @@
 
 """
-Browse history file and act on any recent Timestamps
+Browse history FileIO and act on any recent Timestamps
+
+@author: James Smith
 """
 
 # Import FileIO methods

@@ -1,6 +1,8 @@
 
 """
 Browse Config files and act on any recent changes
+
+@author: James Smith
 """
 
 # Import FileIO methods

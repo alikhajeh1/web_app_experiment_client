@@ -1,5 +1,7 @@
 """
 Simple auxiliary class to provide FileIO methods
+
+@author: James Smith
 """
 
 # Write string out to file
