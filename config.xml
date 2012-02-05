@@ -10,15 +10,7 @@
     <threads>5</threads>
   </level>
   <change>
-    <time>2012-02-01 09:00:00</time>
+    <time>2012-02-05 19:22:00</time>
     <level>Medium</level>
-  </change>
-  <change>
-    <time>2012-02-01 19:00:00</time>
-    <level>High</level>
-  </change>
-  <change>
-    <time>2012-02-01 22:00:00</time>
-    <level>Low</level>
   </change>
 </config>

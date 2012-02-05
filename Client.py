@@ -18,8 +18,11 @@ import threading
 import datetime
 now = datetime.datetime.now()
 
-# Import Thread count level dict
+# Import ConfigMonitor attributes
 from ConfigMonitor import *
+
+# Import ConfigMonitor attributes
+from HistoryMonitor import *
 
 class Client(threading.Thread):
 
@@ -47,6 +50,15 @@ class Client(threading.Thread):
       print "[Client:behaviour] High Thread count: " + threadDict['HIGH']
       print "[Client:behaviour] Medium Thread count: " + threadDict['MEDIUM']
       print "[Client:behaviour] Low Thread count: " + threadDict['LOW']
+
+      # Now check history file for any recent timestamps (past hour)
+      result = checkHistory()
+
+      # If that result is the "current" signal - stay at the current level
+      if result != 'current':
+        print 'Take action'
+        
+
 
       # Have a snooze...
       time.sleep(5)
