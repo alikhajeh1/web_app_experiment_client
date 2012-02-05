@@ -28,12 +28,17 @@ class Client(threading.Thread):
 
   kill_received = False # Boolean to allow interruption
 
-  # Override constructo
+  # Thread list - hold the currently running HTTP Clients
+  threads = []
+
+  # Override constructor
   def __init__(self):
     # Call superclass constructo
     threading.Thread.__init__(self)
     # A flag to notify the thread that it should finish up and exit
     self.kill_received = False
+    # Create list
+    self.threads = []
 
   # Threaded method - default calls the behaviour method (which can be overriden)
   def run ( self ):
@@ -55,11 +60,37 @@ class Client(threading.Thread):
       result = checkHistory()
 
       # If that result is the "current" signal - stay at the current level
-      if result != 'current':
+      # otherwise take action...
+      if result.lower() != 'current':
         print 'Take action'
-        
+        # Extract values -> values[0]=id, values[1]=time, values[2]=level
+        values = result.split(',')
+        level = values[2]
+        print 'Moving to level: ' + level
 
+        # kill current threads
+        for th in self.threads:
+          print 'Killing thread'
+          th.killself = True # set flag and threads will kill their self
 
+        # open x number of threads at this level
+          # where x is defined by the threadDict
+        x = int(threadDict[level])
+        print 'Launching ' + str(x) + ' threads'
+        for i in xrange(x):
+          print 'Creating thread'
+
+          # Choose client level
+          if level == 'HIGH':
+            print 'Creating High thread'
+          elif level == 'MEDIUM':
+            print 'Creating Medium thread'
+            newClient = HTTPClient()
+            newClient.start()
+            threads.append(newClient)
+          elif level == 'LOW':
+            print 'Creating Low thread'
+          
       # Have a snooze...
       time.sleep(5)
 
