@@ -3,9 +3,6 @@ import httplib
 import re
 
 
-
-from MyThread import *
-
 """
 HTTP Client class
 @author: James Smith (jws7) @ St Andrews

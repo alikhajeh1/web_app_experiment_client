@@ -1,10 +1,6 @@
 """
 Client
 
-Class to define interaction with remote HTTP server
-  - threaded to allow simulation of multiple clients
-  - mimics behaviour of a browser by downloading all linked files (js, css, etc)
-
 @author: James Smith
 """
 
@@ -23,6 +19,9 @@ from ConfigMonitor import *
 
 # Import ConfigMonitor attributes
 from HistoryMonitor import *
+
+# Import HTTPClients
+from HTTPClient import *
 
 class Client(threading.Thread):
 
@@ -83,14 +82,20 @@ class Client(threading.Thread):
           # Choose client level
           if level == 'HIGH':
             print 'Creating High thread'
+            newClient = HighHTTPClient()
+            
           elif level == 'MEDIUM':
             print 'Creating Medium thread'
             newClient = HTTPClient()
-            newClient.start()
-            threads.append(newClient)
+
           elif level == 'LOW':
             print 'Creating Low thread'
-          
+            newClient = LowHTTPClient()
+
+          # Start thread and add to list
+          newClient.start()
+          self.threads.append(newClient)
+
       # Have a snooze...
       time.sleep(5)
 
@@ -108,8 +113,13 @@ def main():
     try:
       client.join(1)
     except KeyboardInterrupt:
-     print "Ctrl-c received! Sending kill to threads..."
-     client.kill_received = True 
+      print "Ctrl-c received! Sending kill to threads..."
+     
+      # and all HTTP clients
+      for th in client.threads:
+        th.killself = True # set flag and threads will kill their self
+
+      client.kill_received = True
   
 if __name__ == '__main__':
   main()
