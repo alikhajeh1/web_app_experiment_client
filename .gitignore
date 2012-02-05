@@ -1,0 +1,10 @@
+# MacOSX metadata
+.DS_Store
+
+# Rubymine metadata
+.idea
+
+# VI temp files
+*.swp
+
+*.pyc
