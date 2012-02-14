@@ -23,9 +23,10 @@ import re
 # Import POST Multipart
 from multipart import post_multipart as post_multipart
 
+
+
 # Time/Date object
 import datetime
-now = datetime.datetime.now()
 
 class HTTPClient(threading.Thread):
 
@@ -131,7 +132,16 @@ class HTTPClient(threading.Thread):
     # repeat for hrefs
     hrefs = re.findall(r'link\shref=\"([\w\.:=/\?-]+)\"', html)
     list.extend(hrefs)
-    
+
+    # repeat for hrefs
+    vidIDs = re.findall(r'a\shref=\"/videos/([\d\.:=/\?-]+)\"', html)
+
+    # Choose a random ID
+    # Import random choice method
+    from random import choice
+    randomID = choice(vidIDs)
+    print 'Random Choice: ' + randomID
+
     # debug
     for s in srcs:
       print 'src: [' + s + ']'
@@ -150,6 +160,8 @@ class HTTPClient(threading.Thread):
       else:
         link = link + s
       self.getHTML(link)
+    
+    return randomID
 
   def post(self, url):
 
@@ -159,6 +171,7 @@ class HTTPClient(threading.Thread):
     files is a sequence of (name, filename, value) elements for data to be uploaded as files
     Return the server's response page.
     """
+    now = datetime.datetime.now() # Current timestamp
 
     fields = []
     fields.append(('video[name]', 'PythonTest'))
@@ -167,7 +180,7 @@ class HTTPClient(threading.Thread):
     
     # Read file
     print 'Parsing data...'
-    f = open('/Users/jws7/Movies/BBC iPlayer/repository/cache/bbc_two.mp4', 'r')    
+    f = open('bbc_two.mp4', 'r')    
     data = f.read()
     f.close()
     print 'Read ' + str(len(data)) + ' bytes'
@@ -184,13 +197,26 @@ class HTTPClient(threading.Thread):
   # Threaded method
   def run ( self ):
     while not self.killself:
+      
       print 'Running'
 
-      # Continuiously browse this page...
-      self.browsePage("http://138.251.198.23")
-      self.post("138.251.198.23")
+      # Read index page & select a video ID at random
+      selected = self.browsePage("http://138.251.198.23")
+      print 'RandomID: ' + selected
 
-     
+      # Download (Watch) that video
+      watchStr = 'http://138.251.198.23/videos/' + selected + '/movie'
+      print 'Watching: [' + watchStr + ']'
+      self.getHTML(watchStr)
+
+      # POST a video
+
+
+      #self.post("138.251.198.23")
+      #self.browsePage("http://138.251.198.23")
+      #self.browsePage("http://138.251.198.23/videos/2844/movie") 
+      # http://138.251.198.23/videos/2844/movie
+
     print 'Not Running'
 
 # Testing code...
