@@ -27,6 +27,7 @@ from HighHTTPClient import *
 class Client(threading.Thread):
 
   kill_received = False # Boolean to allow interruption
+  MAX_THREAD_COUNT = 1  # Maxium number of threads to run
 
   # Thread list - hold the currently running HTTP Clients
   threads = []
@@ -44,7 +45,65 @@ class Client(threading.Thread):
   def run ( self ):
       self.behaviour()
 
+  def killThreads(self):
+    # kill current threads
+    for th in self.threads:
+      print 'Killing thread'
+      th.killself = True # set flag and threads will kill their self
+
+  """
+  Method to find the global Maximum number of threads that we can run
+
+  Works similar to TCP slow start -> Builds to a Maximum number by doubling thread count each time
+  If errors occur
+    Set the maxmum limit as the previous level
+  """
+  def slowStart(self):
+    print 'slowStart'
+
+    while not self.kill_received:
+
+      # Create Threads to fill MAX_THREAD_COUNT
+      for i in xrange(self.MAX_THREAD_COUNT - len(self.threads)):
+        print 'Creating thread'
+        th = HTTPClient()
+
+        # Start thread and add to list
+        th.start()
+        self.threads.append(th)
+
+      # Snooze for 5 secs before evaluating
+      time.sleep(5)
+    
+      # Loop through all threads, checking for errors
+      print 'Evaluating threads'
+      for th in self.threads:
+        
+        print 'Thread reporting error: ' + str(th.error)
+
+        # If error, then kill all threads
+        if th.error == True:
+          self.MAX_THREAD_COUNT = len(self.threads) / 2 # Previous level
+          print 'Maximum threads: ' + str(self.MAX_THREAD_COUNT)
+          self.killThreads()
+
+          print 'selfStart finished. MaxThreads: ' + str(self.MAX_THREAD_COUNT)
+
+          # Can never be less than one thread, so check
+          if self.MAX_THREAD_COUNT < 1:
+            print 'Setting thread count to 1'
+            self.MAX_THREAD_COUNT = 1
+          return
+        
+        else: # No errors
+          # Double MAX_THREAD_COUNT
+          self.MAX_THREAD_COUNT = self.MAX_THREAD_COUNT * 2
+      
   def behaviour(self):
+
+    self.slowStart()
+    print 'MAX_THREAD_COUNT: ' + str(self.MAX_THREAD_COUNT)
+
     # Loop until interrupted by Ctrl + C
     while not self.kill_received:
       print '[Client:behaviour] in method'
@@ -67,35 +126,35 @@ class Client(threading.Thread):
         values = result.split(',')
         level = values[2]
         print 'Moving to level: ' + level
-
-        # kill current threads
-        for th in self.threads:
-          print 'Killing thread'
-          th.killself = True # set flag and threads will kill their self
+        
+        # Kill current threads
+        self.killThreads()        
 
         # open x number of threads at this level
-          # where x is defined by the threadDict
-        x = int(threadDict[level])
-        print 'Launching ' + str(x) + ' threads'
-        for i in xrange(x):
+        # where x is defined by the threadDict level
+        x = float(threadDict[level])
+        
+        # Convert level to percentage
+        x = x / 100
+        # Multiply percentage by MAX_THREAD_COUNT
+        threads = int(self.MAX_THREAD_COUNT * x)
+        # catch zero threads
+        if threads == 0:
+          threads = 1
+
+        print 'Launching ' + str(threads) + ' threads'
+        return
+
+        for i in xrange(threads):
           print 'Creating thread'
-
-          # Choose client level
-          if level == 'HIGH':
-            print 'Creating High thread'
-            newClient = HighHTTPClient()
-            
-          elif level == 'MEDIUM':
-            print 'Creating Medium thread'
-            newClient = HTTPClient()
-
-          elif level == 'LOW':
-            print 'Creating Low thread'
-            newClient = LowHTTPClient()
+          newClient = HTTPClient()
 
           # Start thread and add to list
           newClient.start()
           self.threads.append(newClient)
+      
+      else:
+        print 'No changes to be made'
 
       # Have a snooze...
       time.sleep(60)

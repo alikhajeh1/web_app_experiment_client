@@ -1,0 +1,16 @@
+"""
+ 1) Slow Start
+    Begin the system with a single Client thread. Run that thread though a single browse.
+    If no errors
+      Double the current number of threads
+    If errors
+      Roll back to previous level (current / 2) and set that as the global maximum number of threads
+
+  2) Move out of slow start and into Normal operation.
+
+    Let the servers calm down
+    Then start operating at percetage levels (High/Medium/Low) of the maximum
+
+
+
+"""
