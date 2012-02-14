@@ -98,7 +98,7 @@ class Client(threading.Thread):
           self.threads.append(newClient)
 
       # Have a snooze...
-      time.sleep(5)
+      time.sleep(60)
 
   def __init__(self):
     threading.Thread.__init__(self) # if overridding constructor - call super
@@ -106,6 +106,7 @@ class Client(threading.Thread):
 
 # Create a Client class and start it running
 def main():
+
   client = Client()         # Call Constructor
   client.start()            # Start thread
   
