@@ -33,28 +33,8 @@ class HTTPClient(threading.Thread):
   # Attribute to allow thread stopping
   killself = False
 
-  def setupAuth(self, url, username, password):
-    print 'Tasked to get: ' + url + " using Auth"
-
-    # Set up the Auth parameters
-    # create a password manager
-    password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
-
-    # Add the username and password.
-    # If we knew the realm, we could use it instead of None.
-    top_level_url = url
-    password_mgr.add_password(None, top_level_url, username, password)
-    handler = urllib2.HTTPBasicAuthHandler(password_mgr)
-
-    # create "opener" (OpenerDirector instance)
-    opener = urllib2.build_opener(handler)
-
-    # use the opener to fetch a URL
-    opener.open(url)
-
-    # Install the opener.
-    # Now all calls to urllib2.urlopen use our opener.
-    urllib2.install_opener(opener)
+  # Flag to signal that an error has occured
+  error = False
 
   # Get HTML for url as string
   def getHTML(self, url):
@@ -73,10 +53,12 @@ class HTTPClient(threading.Thread):
       if hasattr(e, 'reason'):
         print 'We failed to reach a server.'
         print 'Reason: ', e.reason
+        self.error = True
       elif hasattr(e, 'code'):
         print 'The server couldn\'t fulfill the request.'
         print 'Error code: ', e.code
-    
+        self.error = True
+
     else:  # If no errors
       # Read from the object, storing the page's contents in 's'.
       page = response.read()
@@ -124,44 +106,52 @@ class HTTPClient(threading.Thread):
     # Then get HTML pages
     html = self.getHTML(url)
 
-    list = []
-    # Grab list of all strings that match the regex
-    srcs = re.findall(r'src=\"([\w\.:=/\?-]+)\"', html)
-    # add each link to the list
-    list.extend(srcs)
-    # repeat for hrefs
-    hrefs = re.findall(r'link\shref=\"([\w\.:=/\?-]+)\"', html)
-    list.extend(hrefs)
+    if self.error != True:
 
-    # repeat for hrefs
-    vidIDs = re.findall(r'a\shref=\"/videos/([\d\.:=/\?-]+)\"', html)
+      list = []
+      # Grab list of all strings that match the regex
+      srcs = re.findall(r'src=\"([\w\.:=/\?-]+)\"', html)
+      # add each link to the list
+      list.extend(srcs)
+      # repeat for hrefs
+      hrefs = re.findall(r'link\shref=\"([\w\.:=/\?-]+)\"', html)
+      list.extend(hrefs)
 
-    # Choose a random ID
-    # Import random choice method
-    from random import choice
-    randomID = choice(vidIDs)
-    print 'Random Choice: ' + randomID
+      # repeat for hrefs
+      vidIDs = re.findall(r'a\shref=\"/videos/([\d\.:=/\?-]+)\"', html)
 
-    # debug
-    for s in srcs:
-      print 'src: [' + s + ']'
-    for s in hrefs:
-      print 'hrefs: [' + s + ']'
-    
-    # download all links
-    for s in list:
-      link = '' # empty string
-      if url.endswith('/'):
-        link = url[:-1]
+      # if list len > 0
+      if len(vidIDs) > 0:
+        # Choose a random ID
+        # Import random choice method
+        from random import choice
+        randomID = choice(vidIDs)
+        print 'Random Choice: ' + randomID
       else:
-        link = url
-      if s.startswith('http'):
-        link = s
-      else:
-        link = link + s
-      self.getHTML(link)
-    
-    return randomID
+        randomID = -1
+
+      # debug
+      for s in srcs:
+        print 'src: [' + s + ']'
+      for s in hrefs:
+        print 'hrefs: [' + s + ']'
+      
+      # download all links
+      for s in list:
+        link = '' # empty string
+        if url.endswith('/'):
+          link = url[:-1]
+        else:
+          link = url
+        if s.startswith('http'):
+          link = s
+        else:
+          link = link + s
+        self.getHTML(link)
+      
+      return randomID
+    else:
+      print 'Error getting html'
 
   def post(self, url):
 
@@ -196,26 +186,37 @@ class HTTPClient(threading.Thread):
 
   # Threaded method
   def run ( self ):
+
+    server = "http://138.251.198.21:8080"
+
     while not self.killself:
       
       print 'Running'
 
       # Read index page & select a video ID at random
-      selected = self.browsePage("http://138.251.198.23")
-      print 'RandomID: ' + selected
+      selected = self.browsePage(server)
 
-      # Download (Watch) that video
-      watchStr = 'http://138.251.198.23/videos/' + selected + '/movie'
-      print 'Watching: [' + watchStr + ']'
-      self.getHTML(watchStr)
+      if self.error != True:
 
-      # POST a video
+        # If there are videos to watch
+        if selected >= 0:
+          print 'RandomID: ' + selected
 
+          # Download (Watch) that video
+          watchStr = server + selected + '/movie'
+          print 'Watching: [' + watchStr + ']'
+          self.getHTML(watchStr)
+        else:
+          print 'No uploaded videos to watch'
 
-      #self.post("138.251.198.23")
-      #self.browsePage("http://138.251.198.23")
-      #self.browsePage("http://138.251.198.23/videos/2844/movie") 
-      # http://138.251.198.23/videos/2844/movie
+        # Browse another page
+        self.browsePage(server)
+
+        # POST a video
+        self.post(server)
+      
+       # Have a snooze...
+      time.sleep(2)
 
     print 'Not Running'
 
