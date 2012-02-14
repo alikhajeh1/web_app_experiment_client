@@ -10,15 +10,18 @@ http://code.activestate.com/recipes/146306/
 """
 def post_multipart(host, selector, fields, files):
 
-    print 'Connecting to host: ' + host
-    
-    userid = "username"
-    passwd = "password"
-    # "Basic" authentication encodes userid:password in base64. Note
-    # that base64.encodestring adds some extra newlines/carriage-returns
-    # to the end of the result. string.strip is a simple way to remove
-    # these characters.
-    auth = 'Basic ' + string.strip(base64.encodestring(userid + ':' + passwd))
+    # Deal with encoded port numbers
+    port = 80
+    values = host.split(':')
+    if len(values) == 3:
+        print 'Encoded port number: ' + values[2]
+        
+        host = values[0] + values[1]
+        port = int(values[2])
+
+    # Strip out server string    
+    server = values[1][2:]
+    print 'POST multipart to host: ' + server + ' on port ' + str(port)
 
     """
     Post fields and files to an http host as multipart/form-data.
@@ -27,7 +30,8 @@ def post_multipart(host, selector, fields, files):
     Return the server's response page.
     """
     content_type, body = encode_multipart_formdata(fields, files)
-    h = httplib.HTTP(host)
+
+    h = httplib.HTTP(server, port)
     h.putrequest('POST', "/videos")
     #h.putheader('Authorization', auth )
     h.putheader('content-type', content_type)
