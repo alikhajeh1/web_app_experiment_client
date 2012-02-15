@@ -3,7 +3,7 @@ Client
 
 @author: James Smith (jws7) @ St Andrews
 """
-
+import sys
 # Allow sleeping
 import time
 
@@ -65,12 +65,13 @@ class Client(threading.Thread):
 
       # Create Threads to fill MAX_THREAD_COUNT
       for i in xrange(self.MAX_THREAD_COUNT - len(self.threads)):
-        print 'Creating thread'
+        
         th = HTTPClient()
 
         # Start thread and add to list
         th.start()
         self.threads.append(th)
+        print 'Creating thread. Count: ' + str(len(self.threads))
 
       # Snooze for 5 secs before evaluating
       time.sleep(10)
@@ -83,6 +84,9 @@ class Client(threading.Thread):
 
         # If error, then kill all threads
         if th.error == True:
+
+          self.kill_received = True
+
           self.MAX_THREAD_COUNT = len(self.threads) / 2 # Previous level
           print 'Maximum threads: ' + str(self.MAX_THREAD_COUNT)
           self.killThreads()
@@ -93,11 +97,13 @@ class Client(threading.Thread):
           if self.MAX_THREAD_COUNT < 1:
             print 'Setting thread count to 1'
             self.MAX_THREAD_COUNT = 1
+          
+          sys.exit(0)
           return
-        
-        else: # No errors
-          # Double MAX_THREAD_COUNT
-          self.MAX_THREAD_COUNT = self.MAX_THREAD_COUNT * 2
+      
+      # Outside for loop - if no problem, double         
+      # Double MAX_THREAD_COUNT
+      self.MAX_THREAD_COUNT = self.MAX_THREAD_COUNT * 2
       
   def behaviour(self):
 
