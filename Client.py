@@ -73,7 +73,7 @@ class Client(threading.Thread):
         self.threads.append(th)
 
       # Snooze for 5 secs before evaluating
-      time.sleep(5)
+      time.sleep(10)
     
       # Loop through all threads, checking for errors
       print 'Evaluating threads'
