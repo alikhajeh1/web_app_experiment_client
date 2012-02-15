@@ -14,14 +14,14 @@ def post_multipart(host, selector, fields, files):
     port = 80
     values = host.split(':')
     if len(values) == 3:
-        print 'Encoded port number: ' + values[2]
+        #print 'Encoded port number: ' + values[2]
         
         host = values[0] + values[1]
         port = int(values[2])
 
     # Strip out server string    
     server = values[1][2:]
-    print 'POST multipart to host: ' + server + ' on port ' + str(port)
+    #print 'POST multipart to host: ' + server + ' on port ' + str(port)
 
     """
     Post fields and files to an http host as multipart/form-data.
