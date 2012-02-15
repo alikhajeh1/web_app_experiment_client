@@ -38,7 +38,7 @@ class HTTPClient(threading.Thread):
 
   # Get HTML for url as string
   def getHTML(self, url):
-    print 'Tasked to get: ' + url
+    #print 'Tasked to get: ' + url
 
     # Create request
     req = urllib2.Request(url)
@@ -51,12 +51,12 @@ class HTTPClient(threading.Thread):
     # Handle HTTP errors
     except URLError, e:
       if hasattr(e, 'reason'):
-        print 'We failed to reach a server.'
-        print 'Reason: ', e.reason
+        print '[HTTPClient:getHTML] We failed to reach a server.'
+        print '[HTTPClient:getHTML] Reason: ', e.reason
         self.error = True
       elif hasattr(e, 'code'):
-        print 'The server couldn\'t fulfill the request.'
-        print 'Error code: ', e.code
+        print '[HTTPClient:getHTML] The server couldn\'t fulfill the request.'
+        print '[HTTPClient:getHTML] Error code: ', e.code
         self.error = True
 
     else:  # If no errors
@@ -64,38 +64,6 @@ class HTTPClient(threading.Thread):
       page = response.read()
       response.close()
       return str(page)
-
-  # POST HTTP Request
-  def postReq(self, url):
-    
-    print 'Doing a POST Request to [' + url + ']...'
-
-    # Do auth
-    #self.setupAuth(url, "username", "password")
-
-    print 'Parsing data...'
-    f = open('/Users/jws7/Movies/BBC iPlayer/repository/cache/bbc_two.mp4', 'r')    
-    data = f.read()
-    f.close()
-    print 'Read ' + str(len(data)) + ' bytes'
-    
-    values = {}
-    values['video[author]'] = 'Python Script'
-    values['video[name]'] = 'Python testing...'
-    values['video[movie]'] = data
-    print 'dict created'
-    print values.items()
-
-    print 'making request...'
-    # URL encode data and build request
-    data = urllib.urlencode(values)
-    req = urllib2.Request(url, data)
-    
-    # Now same as before
-    response = urllib2.urlopen(req)
-    page = response.read()
-    print 'response received:'
-    print '[' + page + ']'
 
   # Browse a URL and download all images and linked files
   def browsePage(self, url):
@@ -126,15 +94,15 @@ class HTTPClient(threading.Thread):
         # Import random choice method
         from random import choice
         randomID = choice(vidIDs)
-        print 'Random Choice: ' + randomID
+        #print 'Random Choice: ' + randomID
       else:
         randomID = -1
 
       # debug
-      for s in srcs:
-        print 'src: [' + s + ']'
-      for s in hrefs:
-        print 'hrefs: [' + s + ']'
+     # for s in srcs:
+        #print 'src: [' + s + ']'
+     # for s in hrefs:
+        #print 'hrefs: [' + s + ']'
       
       # download all links
       for s in list:
@@ -151,7 +119,7 @@ class HTTPClient(threading.Thread):
       
       return randomID
     else:
-      print 'Error getting html'
+      print '[HTTPClient:browsePage] Error getting html. Error flag set'
 
   def post(self, url):
 
@@ -169,11 +137,11 @@ class HTTPClient(threading.Thread):
     fields.append(('video[description]', str(now)))
     
     # Read file
-    print 'Parsing data...'
+    #print 'Parsing data...'
     f = open('bbc_two.mp4', 'r')    
     data = f.read()
     f.close()
-    print 'Read ' + str(len(data)) + ' bytes'
+    #print 'Read ' + str(len(data)) + ' bytes'
     
     file = ('video[movie]', 'bbc_two.mp4', data)
     files = []
@@ -182,7 +150,7 @@ class HTTPClient(threading.Thread):
     host = url
     selector = {}
 
-    print post_multipart(host, selector, fields, files)
+    post_multipart(host, selector, fields, files)
 
   # Threaded method
   def run ( self ):
@@ -191,7 +159,7 @@ class HTTPClient(threading.Thread):
 
     while not self.killself:
       
-      print 'Running'
+      #print 'Running'
 
       # Read index page & select a video ID at random
       selected = self.browsePage(server)
@@ -200,11 +168,11 @@ class HTTPClient(threading.Thread):
 
         # If there are videos to watch
         if selected >= 0:
-          print 'RandomID: ' + selected
+          #print 'RandomID: ' + selected
 
           # Download (Watch) that video
           watchStr = server + '/videos/' + selected + '/movie?style=ogg'
-          print 'Watching: [' + watchStr + ']'
+          #print 'Watching: [' + watchStr + ']'
           self.getHTML(watchStr)
         else:
           print 'No uploaded videos to watch'
@@ -218,7 +186,7 @@ class HTTPClient(threading.Thread):
        # Have a snooze...
       time.sleep(2)
 
-    print 'Not Running'
+    print 'HTTPClient Thread killed'
 
 # Testing code...
 def main():
