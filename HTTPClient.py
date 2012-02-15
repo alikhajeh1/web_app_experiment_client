@@ -43,10 +43,13 @@ class HTTPClient(threading.Thread):
     # Create request
     req = urllib2.Request(url)
     
+    response = None
+    page = None
     # Prepare for HTTP Errors
     try:
       # Get a file-like object for the Python Web site's home page.
       response = urllib2.urlopen(req)
+      page = response.read()
     
     # Handle HTTP errors
     except URLError, e:
@@ -58,12 +61,10 @@ class HTTPClient(threading.Thread):
         print '[HTTPClient:getHTML] The server couldn\'t fulfill the request.'
         print '[HTTPClient:getHTML] Error code: ', e.code
         self.error = True
-
-    else:  # If no errors
-      # Read from the object, storing the page's contents in 's'.
-      page = response.read()
-      response.close()
-      return str(page)
+    finally:
+      if response is not None:
+        response.close()
+    return str(page)
 
   # Browse a URL and download all images and linked files
   def browsePage(self, url):
