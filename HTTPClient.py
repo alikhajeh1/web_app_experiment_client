@@ -203,7 +203,7 @@ class HTTPClient(threading.Thread):
           print 'RandomID: ' + selected
 
           # Download (Watch) that video
-          watchStr = server + selected + '/movie'
+          watchStr = server + '/videos/' + selected + '/movie?style=ogg'
           print 'Watching: [' + watchStr + ']'
           self.getHTML(watchStr)
         else:
