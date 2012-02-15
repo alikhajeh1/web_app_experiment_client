@@ -85,7 +85,7 @@ class Client(threading.Thread):
         # If error, then kill all threads
         if th.error == True:
 
-          self.kill_received = True
+          #self.kill_received = True
 
           self.MAX_THREAD_COUNT = len(self.threads) / 2 # Previous level
           print 'Maximum threads: ' + str(self.MAX_THREAD_COUNT)
@@ -98,7 +98,7 @@ class Client(threading.Thread):
             print 'Setting thread count to 1'
             self.MAX_THREAD_COUNT = 1
           
-          sys.exit(0)
+          #sys.exit(0)
           return
       
       # Outside for loop - if no problem, double         
@@ -109,6 +109,7 @@ class Client(threading.Thread):
 
     self.slowStart()
     print 'MAX_THREAD_COUNT: ' + str(self.MAX_THREAD_COUNT)
+    time.sleep(60)
 
     # Loop until interrupted by Ctrl + C
     while not self.kill_received:
