@@ -33,23 +33,23 @@ def getID(time):
 
 # Add entry to History file if not present
 def addIfNotPresent(id, time, level):
-  print 'Checking history for ID:' + id
+  #print 'Checking history for ID:' + id
 
   if id not in changeDict:
-    print 'Not found. Addding'
+    #print 'Not found. Addding'
     tuple = (id, time, level)
-    print tuple
+    #print tuple
     changeDict[id] = tuple
 
     # Now add to history file
     csv = read("history.csv")
-    print csv
+    #print csv
     line = id + ',' + time + ',' + level.upper()
-    print line
+    #print line
     csv = csv + '\n' + line
     write("history.csv", csv)
 
-  print changeDict.items()
+  #print changeDict.items()
   return changeDict # Can pass current changeDict back to Client
 
 """
@@ -63,22 +63,22 @@ Example of a change entry:
   </change>
 """
 def parseConfig():
-  print 'parseConfig method'
+  #print 'parseConfig method'
   config = read("config.xml")
-  print config
+  #print config
   changes = config.split('<change>')
   for s in changes[1:]:
     print 'found change'
     
     # Extract timestamp and convert to id
     time = re.search(r'\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}', s)
-    print 'time = ' + time.group()
+    #print 'time = ' + time.group()
     id = getID(time.group())
-    print 'id = ' + id
+    #print 'id = ' + id
 
     # Extract level
     level = re.search(r'<level>([\w.:]+)</level>', s)
-    print 'level = [' + level.group(1) + ']'
+    #print 'level = [' + level.group(1) + ']'
 
     # add to history file
     addIfNotPresent(id, time.group(), level.group(1))
@@ -88,16 +88,16 @@ def parseConfig():
   for s in levels[1:]:
     # Extract Level a value
     level = re.search(r'id=\"([\w.:]+)\"', s)
-    print 'level = ' + level.group(1)
+    #print 'level = ' + level.group(1)
 
     # Get thread count
     threads = re.search(r'<threads>(\d+)</threads>', s)
     if threads:  
-      print 'threads = [' + threads.group(1) + ']'
+      #print 'threads = [' + threads.group(1) + ']'
 
       #Now add threads value to dict
       threadDict[level.group(1).upper()] = threads.group(1)
-      print threadDict.items()
+      #print threadDict.items()
 
 
 def main():
