@@ -147,7 +147,7 @@ class HTTPClient(threading.Thread):
     f.close()
     self.txBytes += len(data)
     
-    file = ('video[movie]', 'trailer.ogg', data)
+    file = ('video[movie]', 'ELL_PART_5_768k.wmv', data)
     files = []
     files.append(file)
 
