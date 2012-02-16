@@ -164,29 +164,28 @@ class HTTPClient(threading.Thread):
 
     while not self.killself:
     
-      self.httpPOST(server)
       # Browse a HTML page - returns a video ID if present
-      #selected = self.browsePage(server)
+      selected = self.browsePage(server)
 
       # If No errors in our initial browse (the server is UP)
-      #if self.error != True:
+      if self.error != True:
 
         # If there are videos to watch
-        #if selected >= 0:
+        if selected >= 0:
 
           # Download (Watch) that video
-          #watchStr = server + '/videos/' + selected + '/movie?style=ogg'
-          #print 'Watching: [' + watchStr + ']'
-          #self.httpGET(watchStr)
-        #else:
-         # print 'No uploaded videos to watch'
+          watchStr = server + '/videos/' + selected + '/movie?style=ogg'
+          print 'Watching: [' + watchStr + ']'
+          self.httpGET(watchStr)
+        else:
+          print 'No uploaded videos to watch'
 
         # Browse another page
-        #self.browsePage(server)
+        self.browsePage(server)
 
         # POST a video
-        #self.httpPOST(server)
-      
+        self.httpPOST(server)
+        
        # Have a snooze...
       time.sleep(30) # 5 secs between iterations
       self.error = False
