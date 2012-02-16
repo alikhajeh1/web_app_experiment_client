@@ -65,9 +65,9 @@ class Client(threading.Thread):
 
       # Create Threads to fill MAX_THREAD_COUN
       number = self.MAX_THREAD_COUNT - len(self.threads)
-      print 'Creating ' + number + ' active threads'
+      print 'Creating ' + str(number) + ' active threads'
       for i in xrange(number):
-        
+          
         # Start thread and add to list
         th = HTTPClient()
         th.start()
