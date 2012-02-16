@@ -142,7 +142,7 @@ class HTTPClient(threading.Thread):
     fields.append(('video[description]', str(now)))
     
     # Read file
-    f = open('bbc_two.mp4', 'r')    
+    f = open('ELL_PART_5_768k.wmv', 'r')    
     data = f.read()
     f.close()
     self.txBytes += len(data)
