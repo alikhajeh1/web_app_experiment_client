@@ -163,6 +163,10 @@ class HTTPClient(threading.Thread):
     server = "http://138.251.198.21:8080"
 
     while not self.killself:
+
+      # POST a video
+      self.httpPOST(server)
+      print 'Finished posting a video'
     
       # Browse a HTML page - returns a video ID if present
       selected = self.browsePage(server)
@@ -184,10 +188,6 @@ class HTTPClient(threading.Thread):
         self.browsePage(server)
         self.browsePage(server)
         self.browsePage(server)
-
-      # POST a video
-      self.httpPOST(server)
-      print 'Finished posting a video'
 
        # Have a snooze...
       time.sleep(5) # 5 secs between iterations
