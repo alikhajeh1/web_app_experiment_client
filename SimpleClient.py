@@ -109,7 +109,7 @@ def main():
   number = 2
   # Adjust if given a command line argument
   if (len(sys.argv) > 1):
-    number = sys.argv[1]
+    number = int(sys.argv[1])
     print 'Starting client with ' + str(number)
 
   client = SimpleClient(number)         # Call Constructor
