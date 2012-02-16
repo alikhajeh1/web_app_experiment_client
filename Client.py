@@ -12,7 +12,7 @@ import threading
 
 # Time/Date object
 import datetime
-now = datetime.datetime.now()
+
 
 # Import ConfigMonitor attributes
 from ConfigMonitor import *
@@ -114,7 +114,10 @@ class Client(threading.Thread):
     # Loop until interrupted by Ctrl + C
     while not self.kill_received:
       print '[Client:behaviour] in method'
+  
+      now = datetime.datetime.now()
       print "[Client:behaviour] Current date and time:" + str(now)
+      print "[Client:behaviour] Current concurrent thread count:" + len(self.threads)
 
       # Now parse the Config File and show the current thread level counts
       parseConfig()
