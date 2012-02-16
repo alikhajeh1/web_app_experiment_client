@@ -175,7 +175,7 @@ class HTTPClient(threading.Thread):
 
           # Download (Watch) that video
           watchStr = server + '/videos/' + selected + '/movie?style=ogg'
-          print 'Watching: [' + watchStr + ']'
+          #print 'Watching: [' + watchStr + ']'
           self.httpGET(watchStr)
         else:
           print 'No uploaded videos to watch'
@@ -185,6 +185,7 @@ class HTTPClient(threading.Thread):
 
         # POST a video
         self.httpPOST(server)
+        print 'Finished posting a video'
 
        # Have a snooze...
       time.sleep(15) # 5 secs between iterations
