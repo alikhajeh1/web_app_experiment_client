@@ -159,10 +159,14 @@ class HTTPClient(threading.Thread):
   # Threaded method
   def run ( self ):
 
-    # Define server to access
-    server = "http://138.251.198.21:8080"
+    # Define list of server to access
+    servers = ['http://138.251.198.21:8080', 'http://138.251.198.21:8081', 'http://138.251.198.21:8082', 'http://138.251.198.21:8083', 'http://138.251.198.21:8084', 'http://138.251.198.21:8085', 'http://138.251.198.21:8086', 'http://138.251.198.21:8087']
+
 
     while not self.killself:
+
+      # Choose a server
+      server = choice(servers)
 
       # POST a video
       self.httpPOST(server)
