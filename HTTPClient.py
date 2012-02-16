@@ -185,9 +185,9 @@ class HTTPClient(threading.Thread):
         self.browsePage(server)
         self.browsePage(server)
 
-        # POST a video
-        self.httpPOST(server)
-        print 'Finished posting a video'
+      # POST a video
+      self.httpPOST(server)
+      print 'Finished posting a video'
 
        # Have a snooze...
       time.sleep(5) # 5 secs between iterations
