@@ -23,10 +23,11 @@ import re
 # Import POST Multipart
 from multipart import post_multipart as post_multipart
 
-
-
 # Time/Date object
 import datetime
+
+# Allow a random list choice
+from random import choice
 
 class HTTPClient(threading.Thread):
 
@@ -36,9 +37,19 @@ class HTTPClient(threading.Thread):
   # Flag to signal that an error has occured
   error = False
 
+  # Request counter
+  getReqs = 0
+  postReqs = 0
+
+  # Bandwidth counters
+  rxBytes = 0
+  txBytes = 0
+
   # Get HTML for url as string
-  def getHTML(self, url):
-    #print 'Tasked to get: ' + url
+  def httpGET(self, url):
+
+    # Increment request counter
+    self.getReqs += 1
 
     # Create request
     req = urllib2.Request(url)
@@ -50,6 +61,7 @@ class HTTPClient(threading.Thread):
       # Get a file-like object for the Python Web site's home page.
       response = urllib2.urlopen(req)
       page = response.read()
+      self.rxBytes += len(page)
     
     # Handle HTTP errors
     except URLError, e:
@@ -69,11 +81,8 @@ class HTTPClient(threading.Thread):
   # Browse a URL and download all images and linked files
   def browsePage(self, url):
 
-    # Do auth
-    #self.setupAuth(url, "username", "password")
-
     # Then get HTML pages
-    html = self.getHTML(url)
+    html = self.httpGET(url)
 
     if self.error != True:
 
@@ -86,24 +95,16 @@ class HTTPClient(threading.Thread):
       hrefs = re.findall(r'link\shref=\"([\w\.:=/\?-]+)\"', html)
       list.extend(hrefs)
 
-      # repeat for hrefs
+      # repeat for video links
       vidIDs = re.findall(r'a\shref=\"/videos/([\d\.:=/\?-]+)\"', html)
 
-      # if list len > 0
+      # if video list len > 0
       if len(vidIDs) > 0:
         # Choose a random ID
-        # Import random choice method
-        from random import choice
         randomID = choice(vidIDs)
         #print 'Random Choice: ' + randomID
       else:
         randomID = -1
-
-      # debug
-     # for s in srcs:
-        #print 'src: [' + s + ']'
-     # for s in hrefs:
-        #print 'hrefs: [' + s + ']'
       
       # download all links
       for s in list:
@@ -116,13 +117,13 @@ class HTTPClient(threading.Thread):
           link = s
         else:
           link = link + s
-        self.getHTML(link)
+        self.httpGET(link)
       
       return randomID
-    else:
-      print '[HTTPClient:browsePage] Error getting html. Error flag set'
 
-  def post(self, url):
+  def httpPOST(self, url):
+    # Increment request counter
+    self.postReqs += 1
 
     """
     Post fields and files to an http host as multipart/form-data.
@@ -135,14 +136,16 @@ class HTTPClient(threading.Thread):
     fields = []
     fields.append(('video[name]', 'PythonTest'))
     fields.append(('video[author]', 'Python Script'))
+
+    # Get current timestamp - set as description
+    now = datetime.datetime.now()
     fields.append(('video[description]', str(now)))
     
     # Read file
-    #print 'Parsing data...'
     f = open('bbc_two.mp4', 'r')    
     data = f.read()
     f.close()
-    #print 'Read ' + str(len(data)) + ' bytes'
+    self.txData += len(data)
     
     file = ('video[movie]', 'bbc_two.mp4', data)
     files = []
@@ -156,25 +159,24 @@ class HTTPClient(threading.Thread):
   # Threaded method
   def run ( self ):
 
+    # Define server to access
     server = "http://138.251.198.21:8080"
 
     while not self.killself:
-      
-      #print 'Running'
-
-      # Read index page & select a video ID at random
+    
+      # Browse a HTML page - returns a video ID if present
       selected = self.browsePage(server)
 
+      # If No errors in our initial browse (the server is UP)
       if self.error != True:
 
         # If there are videos to watch
         if selected >= 0:
-          #print 'RandomID: ' + selected
 
           # Download (Watch) that video
           watchStr = server + '/videos/' + selected + '/movie?style=ogg'
           #print 'Watching: [' + watchStr + ']'
-          self.getHTML(watchStr)
+          self.httpGET(watchStr)
         else:
           print 'No uploaded videos to watch'
 
@@ -182,10 +184,10 @@ class HTTPClient(threading.Thread):
         self.browsePage(server)
 
         # POST a video
-        self.post(server)
+        self.httpPOST(server)
       
        # Have a snooze...
-      time.sleep(2)
+      time.sleep(5) # 5 secs between iterations
 
 # Testing code...
 def main():
@@ -193,9 +195,9 @@ def main():
   newClient = HTTPClient()
   newClient.start()
   
-  # Have a snooze...
+  # Limit to 1 iteration
   time.sleep(1)
-  newClient.killself = True
+  newClient.killself = True 
 
 if __name__ == '__main__':
   main()
