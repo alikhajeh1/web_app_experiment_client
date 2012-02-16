@@ -99,8 +99,6 @@ class SimpleClient(threading.Thread):
       txBytes = txBytes / 1000000
       print "[Client:run] Downloading at " + str(rxBytes) + " MB/m and Uploading at " + str(txBytes) + " MB/m"
 
-
-
       # Have a snooze...
       time.sleep(60)
 

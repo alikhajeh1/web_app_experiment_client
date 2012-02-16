@@ -188,6 +188,7 @@ class HTTPClient(threading.Thread):
       
        # Have a snooze...
       time.sleep(5) # 5 secs between iterations
+      self.error = False
 
 # Testing code...
 def main():
