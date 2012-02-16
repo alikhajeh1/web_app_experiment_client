@@ -185,9 +185,9 @@ class HTTPClient(threading.Thread):
 
         # POST a video
         self.httpPOST(server)
-        
+
        # Have a snooze...
-      time.sleep(30) # 5 secs between iterations
+      time.sleep(15) # 5 secs between iterations
       self.error = False
 
 # Testing code...
