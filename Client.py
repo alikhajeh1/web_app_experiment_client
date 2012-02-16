@@ -63,15 +63,16 @@ class Client(threading.Thread):
 
     while not self.kill_received:
 
-      # Create Threads to fill MAX_THREAD_COUNT
-      for i in xrange(self.MAX_THREAD_COUNT - len(self.threads)):
+      # Create Threads to fill MAX_THREAD_COUN
+      number = self.MAX_THREAD_COUNT - len(self.threads)
+      print 'Creating ' + number + ' active threads'
+      for i in xrange(number):
         
-        th = HTTPClient()
-
         # Start thread and add to list
+        th = HTTPClient()
         th.start()
         self.threads.append(th)
-        print 'Creating thread. Count: ' + str(len(self.threads))
+        
 
       # Snooze for 5 secs before evaluating
       time.sleep(10)
@@ -80,8 +81,6 @@ class Client(threading.Thread):
       print 'Evaluating threads'
       for th in self.threads:
         
-        print 'Thread reporting error: ' + str(th.error)
-
         # If error, then kill all threads
         if th.error == True:
 
@@ -100,6 +99,9 @@ class Client(threading.Thread):
           
           #sys.exit(0)
           return
+      
+      # If no errors received   
+      print 'No threads returned errors'    
       
       # Outside for loop - if no problem, double         
       # Double MAX_THREAD_COUNT

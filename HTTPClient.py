@@ -187,8 +187,6 @@ class HTTPClient(threading.Thread):
        # Have a snooze...
       time.sleep(2)
 
-    print 'HTTPClient Thread killed'
-
 # Testing code...
 def main():
   print 'Creating a HTTPClient instance'
