@@ -1,0 +1,4 @@
+[Client:Constructor:] in method Constructor
+slowStart
+Ctrl-c received! Sending kill to threads...
+HTTPClient Thread killed
