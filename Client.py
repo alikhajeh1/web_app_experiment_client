@@ -47,8 +47,8 @@ class Client(threading.Thread):
 
   def killThreads(self):
     # kill current threads
+    print 'Killing all active threads'
     for th in self.threads:
-      print 'Killing thread'
       th.killself = True # set flag and threads will kill their self
 
   """
@@ -117,7 +117,7 @@ class Client(threading.Thread):
   
       now = datetime.datetime.now()
       print "[Client:behaviour] Current date and time:" + str(now)
-      print "[Client:behaviour] Current concurrent thread count:" + str(len(self.threads))
+      print "[Client:behaviour] Current concurrent thread count:" + str(len(self.threads))  
 
       # Now parse the Config File and show the current thread level counts
       parseConfig()
