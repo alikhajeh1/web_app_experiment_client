@@ -145,9 +145,9 @@ class HTTPClient(threading.Thread):
     f = open('bbc_two.mp4', 'r')    
     data = f.read()
     f.close()
-    self.txData += len(data)
+    self.txBytes += len(data)
     
-    file = ('video[movie]', 'bbc_two.mp4', data)
+    file = ('video[movie]', 'trailer.ogg', data)
     files = []
     files.append(file)
 
