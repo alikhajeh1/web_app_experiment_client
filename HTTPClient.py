@@ -160,7 +160,7 @@ class HTTPClient(threading.Thread):
   def run ( self ):
 
     # Define list of server to access
-    servers = ['http://138.251.198.24:8080']
+    servers = ['http://138.251.198.24:8080',  'http://138.251.198.24:8081', 'http://138.251.198.24:8082', 'http://138.251.198.24:8083', 'http://138.251.198.24:8084', 'http://138.251.198.24:8085', 'http://138.251.198.24:8086', 'http://138.251.198.24:8087']
 
     while not self.killself:
 
