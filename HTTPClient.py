@@ -135,19 +135,19 @@ class HTTPClient(threading.Thread):
 
     fields = []
     fields.append(('video[name]', 'PythonTest'))
-    fields.append(('video[author]', 'Python Script bbc_two.mp4'))
+    fields.append(('video[author]', 'Python Script ELL_PART_5_768k.wmv'))
 
     # Get current timestamp - set as description
     now = datetime.datetime.now()
     fields.append(('video[description]', str(now)))
     
     # Read file
-    f = open('bbc_two.mp4', 'r')    
+    f = open('ELL_PART_5_768k.wmv', 'r')    
     data = f.read()
     f.close()
     self.txBytes += len(data)
     
-    file = ('video[movie]', 'bbc_two.mp4', data)
+    file = ('video[movie]', 'ELL_PART_5_768k.wmv', data)
     files = []
     files.append(file)
 
