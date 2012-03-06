@@ -135,19 +135,19 @@ class HTTPClient(threading.Thread):
 
     fields = []
     fields.append(('video[name]', 'PythonTest'))
-    fields.append(('video[author]', 'Python Script'))
+    fields.append(('video[author]', 'Python Script bbc_two.mp4'))
 
     # Get current timestamp - set as description
     now = datetime.datetime.now()
     fields.append(('video[description]', str(now)))
     
     # Read file
-    f = open('ELL_PART_5_768k.wmv', 'r')    
+    f = open('bbc_two.mp4', 'r')    
     data = f.read()
     f.close()
     self.txBytes += len(data)
     
-    file = ('video[movie]', 'ELL_PART_5_768k.wmv', data)
+    file = ('video[movie]', 'bbc_two.mp4', data)
     files = []
     files.append(file)
 
@@ -160,8 +160,7 @@ class HTTPClient(threading.Thread):
   def run ( self ):
 
     # Define list of server to access
-    servers = ['http://138.251.198.24:8080', 'http://138.251.198.24:8081', 'http://138.251.198.24:8082', 'http://138.251.198.24:8083', 'http://138.251.198.24:8084', 'http://138.251.198.24:8085', 'http://138.251.198.24:8086', 'http://138.251.198.24:8087']
-
+    servers = ['http://138.251.198.24:8080']
 
     while not self.killself:
 
