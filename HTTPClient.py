@@ -80,7 +80,7 @@ class HTTPClient(threading.Thread):
 
   # Browse a URL and download all images and linked files
   def browsePage(self, url):
-     print "browsing a page..."
+    print "browsing a page..."
 
     # Then get HTML pages
     html = self.httpGET(url)
