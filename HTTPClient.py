@@ -47,7 +47,6 @@ class HTTPClient(threading.Thread):
 
   # Get HTML for url as string
   def httpGET(self, url):
-    print "doing a GET request..."
 
     # Increment request counter
     self.getReqs += 1
@@ -81,6 +80,7 @@ class HTTPClient(threading.Thread):
 
   # Browse a URL and download all images and linked files
   def browsePage(self, url):
+     print "browsing a page..."
 
     # Then get HTML pages
     html = self.httpGET(url)
