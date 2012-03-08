@@ -47,6 +47,7 @@ class HTTPClient(threading.Thread):
 
   # Get HTML for url as string
   def httpGET(self, url):
+    print "doing a GET request..."
 
     # Increment request counter
     self.getReqs += 1
@@ -182,7 +183,7 @@ class HTTPClient(threading.Thread):
 
           # Download (Watch) that video
           watchStr = server + '/videos/' + selected + '/movie?style=ogg'
-          #print 'Watching: [' + watchStr + ']'
+          print 'Watching: [' + watchStr + ']'
           self.httpGET(watchStr)
         else:
           print 'No uploaded videos to watch'
