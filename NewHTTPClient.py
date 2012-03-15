@@ -175,6 +175,11 @@ class HTTPClient():
       # Update on current status
       print 'Recieved ' + str(self.rxBytes) + ' Bytes over ' + str(self.getReqs) + ' GET Reqs'
       print 'Transmitted ' + str(self.txBytes) + ' Bytes over ' + str(self.postReqs) + ' POST Reqs'
+      # reset stats
+      self.rxBytes = 0
+      self.txBytes = 0
+      self.getReqs = 0
+      self.postReqs = 0
 
        # Have a snooze...
       time.sleep(5) # 5 secs between iterations
