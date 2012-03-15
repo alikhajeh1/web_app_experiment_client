@@ -10,6 +10,9 @@ Class to define interaction with remote HTTP server
 # Allow sleeping
 import time
 
+# Time/Date object
+import datetime
+
 # Allow multi-threading
 import threading
 
@@ -154,6 +157,9 @@ class HTTPClient():
 
     while True:
 
+      now = datetime.datetime.now()
+      print "[Client:run] Current date and time:" + str(now)
+
       # Choose a server
       server = choice(servers)
 
@@ -164,6 +170,7 @@ class HTTPClient():
       # Browse a HTML page - returns a video ID if present
       selected = self.browsePage(server)
       print 'Finished browsing a page'
+      
 
       # Update on current status
       print 'Recieved ' + str(self.rxBytes) + ' Bytes over ' + str(self.getReqs) + ' GET Reqs'
