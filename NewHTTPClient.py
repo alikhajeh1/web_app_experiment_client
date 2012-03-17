@@ -150,7 +150,12 @@ class HTTPClient():
   def run ( self ):
 
     # Define list of server to access
-    servers = ['http://138.251.198.24:8080',  'http://138.251.198.24:8081', 'http://138.251.198.24:8082', 'http://138.251.198.24:8083', 'http://138.251.198.24:8084', 'http://138.251.198.24:8085', 'http://138.251.198.24:8086', 'http://138.251.198.24:8087']
+    servers = ['http://138.251.198.24:8080'] 
+
+    """
+     'http://138.251.198.24:8081', 'http://138.251.198.24:8082', 'http://138.251.198.24:8083', 'http://138.251.198.24:8084', 'http://138.251.198.24:8085', 'http://138.251.198.24:8086', 'http://138.251.198.24:8087']
+
+    """
 
     # Comment this line out to run on remote servers
     #servers = ['http://jws7-laptop/~jws7/simple%20jws7/']
